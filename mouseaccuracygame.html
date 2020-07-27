@@ -1,0 +1,178 @@
+<html>
+<head>
+<title>Mouse Accuracy Game</title>
+<style type="text/css">
+body{
+  background-color: #b5e7a0;
+}
+  #heading
+  {
+    text-align: center;
+    font-size: 40px;
+    font-family:cursive;
+  }
+
+  #content {
+    width: 200px;
+    border: 1px solid #50394c;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    user-select: none;
+    background-color: #b2b2b2;
+    font-family: "Gill Sans", sans-serif;
+  }
+
+  #clickarea {
+    width: 500px;
+    height : 300px;
+    border: 2px solid #36486b;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    position: relative;
+    background-color: #b1cbbb;
+  }
+
+
+
+  #start {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(220, 0, 0, 1);
+
+  }
+
+  #start:hover {
+    background-color: rgba(255, 0, 0, 1);
+  }
+
+  #start:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+  }
+
+#image {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background-color: #034f84;
+}
+</style>
+</head>
+<body>
+  <div id="heading">
+      Mouse Accuracy Game
+  </div>
+  <div id="content">
+    Timer: <span id="timer"></span><br/>
+    Score: <span id="score"></span><br/>
+    Clicks/s: <span id="clicks"></span>
+  </div>
+  <div id="clickarea">
+      <div id="image" hidden ></div>
+    <button id="start" onclick="startGame();">Start</button>
+
+  </div>
+  <script type="text/javascript">
+    var score;
+    var duration = 10; // 10 seconds
+    var startTime;
+    var ended = true;
+    var timerTxt = document.getElementById("timer");
+    var scoreTxt = document.getElementById("score");
+    var clicksTxt = document.getElementById("clicks");
+    var startBtn = document.getElementById("start");
+    var clickArea = document.getElementById("clickarea");
+
+    var img=document.getElementById('image');
+
+    var show = function(startBtn) {
+      startBtn.style.display = 'inline';
+    };
+
+    var hide = function(startBtn) {
+      startBtn.style.display = 'none';
+    };
+
+    img.addEventListener("click", function(e) {
+      if (!ended) {
+        score++;
+        scoreTxt.textContent = score;
+      }
+    });
+
+
+    function startGame()
+    {
+      show(img);
+      img.addEventListener("click",move);
+        function move()
+        {
+          var pos1 = Math.floor((Math.random() * 300) +1);
+          var pos2 = Math.floor((Math.random() * 300) +1);
+
+          img.style.top = pos1 +"px";
+          img.style.left = pos2 +"px";
+      }
+
+
+      hide(startBtn);
+      score = 0;
+      ended = false;
+
+      startTime = new Date().getTime();
+
+
+      var timerId = setInterval(function() {
+        var total = (new Date().getTime() - startTime) / 1000;
+
+
+        if (total < duration) {
+          timerTxt.textContent = total.toFixed(2);
+          clicksTxt.textContent = (score / total).toFixed(2);
+        } else {
+
+          ended = true;
+          clearInterval(timerId);
+
+          endGame();
+        }
+      }, 1);
+  }
+
+
+  function endGame() {
+    hide(img);
+    var clicksBySeconds = (score / duration).toFixed(2);
+    timerTxt.textContent = duration.toFixed(2);
+    clicksTxt.textContent = clicksBySeconds;
+
+    show(startBtn);
+
+    setTimeout(function() {
+      alert('You made ' + score + ' clicks in ' + duration +
+      ' seconds. It is ' + clicksBySeconds +
+      ' clicks by seconds. Try again!');
+    }, 10);
+  }
+
+
+
+
+</script>
+</body>
+</html>
